@@ -81,21 +81,22 @@ int main(void)
 		
 
 	char *a;
-	a = "love elina.	";
+	a = "Dang Thao Nguyen ";
 	for(int i = 0; i < strlen(a) ; i++)
 	{
 			data[i] = (uint8_t)a[i];
 
 	}
   /* Infinite loop */
-	Lora_SetMode(GPIOA,mode0);
+	
 	//Lora_transmit(&huart1,data);
-	HAL_UART_Receive_IT(&huart1, rxdata,sizeof(rxdata));
+//	HAL_UART_Receive_IT(&huart1, rxdata,sizeof(rxdata));
   while (1)
   {
-			
-				//Lora_transmit(&huart1,data);
-				HAL_Delay(3000);
+			Lora_SetMode(GPIOA,mode0);
+		  Lora_transmit(&huart1,data);
+		  Lora_SetMode(GPIOA,mode3);
+			HAL_Delay(5000);
 		
 
   }

@@ -62,7 +62,7 @@ int LORA_Init(UART_num UARTx,UART_HandleTypeDef *s_UARTHandle)
 	 HAL_NVIC_SetPriority(USART1_IRQn, 1, 0);
    HAL_NVIC_EnableIRQ(USART1_IRQn);
 
-	s_UARTHandle->Init.BaudRate = 9600;
+	s_UARTHandle->Init.BaudRate = 115200;
 	s_UARTHandle->Init.WordLength = UART_WORDLENGTH_8B;
 	s_UARTHandle->Init.StopBits = UART_STOPBITS_1;
 	s_UARTHandle->Init.Parity = UART_PARITY_NONE;
