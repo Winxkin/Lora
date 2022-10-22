@@ -20,6 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "Lora.h"
+#include "Soil_moisture.h"
+#include "DHT11.h"
 /** @addtogroup STM32F1xx_HAL_Examples
   * @{
   */
@@ -29,13 +31,20 @@
   */
 
 /* Private typedef -----------------------------------------------------------*/
+#define LORA_ADD 0x11
+#define NODE 		 0x01
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart1;
+ADC_HandleTypeDef hadc1;
+TIM_HandleTypeDef ustim;
+
+//----------------
 uint8_t data[10];
 uint8_t rxdata[3];
-uint8_t ID;
+uint8_t var;
+uint8_t temp,humi;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
@@ -78,25 +87,31 @@ int main(void)
 	
   /* Add your application code here */
 	LORA_Init(UART1,&huart1);
-		
+  Soil_moisture_init_ADC1(&hadc1);
+	DHT11_init(&ustim);
 
-	char *a;
-	a = "Dang Thao Nguyen ";
-	for(int i = 0; i < strlen(a) ; i++)
-	{
-			data[i] = (uint8_t)a[i];
 
-	}
+   data[0] = LORA_ADD;
+	 data[1] = NODE;
+	 data[2] = 0x05;
+	// data[3] = 0x0F;
+//	 uint8_t sum = checksum(data,strlen((char*)data));
+//	 data[strlen((char*)data)] = sum;
+//	
   /* Infinite loop */
-	
+	//Lora_SetMode(GPIOA,mode0);
 	//Lora_transmit(&huart1,data);
 //	HAL_UART_Receive_IT(&huart1, rxdata,sizeof(rxdata));
   while (1)
-  {
-			Lora_SetMode(GPIOA,mode0);
-		  Lora_transmit(&huart1,data);
-		  Lora_SetMode(GPIOA,mode3);
-			HAL_Delay(5000);
+  {   
+		  
+		   DHT11_Read(&ustim,&temp,&humi);
+		
+//		  data[3] = Soil_moisture_Read(&hadc1);
+//			Lora_SetMode(GPIOA,mode0);
+//		  Lora_transmit(&huart1,data);
+//		  Lora_SetMode(GPIOA,mode3);
+//			HAL_Delay(5000);
 		
 
   }

@@ -167,3 +167,24 @@ void clear_data(uint8_t *pData)
 		}
 	
 }
+
+uint8_t checksum (uint8_t *Data, int lengh)
+{
+  int sum = 0;  
+  for(int i =0; i<lengh ; i++)
+  {
+    sum += Data[i];
+  }
+  return (~sum + 2);
+}
+
+uint8_t checksum_rxData (uint8_t *Data, int lengh)
+{
+  uint8_t sum = 0;  
+  for(int i =0; i<lengh ; i++)
+  {
+    sum += Data[i];
+  }
+  return (~sum + 2);
+}
+

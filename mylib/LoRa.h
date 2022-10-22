@@ -31,6 +31,8 @@ void Lora_SetMode (GPIO_TypeDef *GPIOx, E32_mode mode);
 void Lora_transmit ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData);
 void clear_data(uint8_t *pData);
 int Lora_Receive ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData);
+uint8_t checksum (uint8_t *Data, int lengh);
+uint8_t checksum_rxData (uint8_t *Data, int lengh);
 
 
 #endif
