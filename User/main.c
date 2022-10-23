@@ -22,6 +22,7 @@
 #include "Lora.h"
 #include "Soil_moisture.h"
 #include "DHT11.h"
+#include "sleep_mode.h"
 /** @addtogroup STM32F1xx_HAL_Examples
   * @{
   */
@@ -39,11 +40,13 @@
 UART_HandleTypeDef huart1;
 ADC_HandleTypeDef hadc1;
 TIM_HandleTypeDef ustim;
+TIM_HandleTypeDef htim2;
 
 //----------------
 uint8_t data[10];
 uint8_t rxdata[3];
 uint8_t var;
+uint8_t var2;
 uint8_t temp,humi;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -58,6 +61,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			 HAL_UART_Receive_IT(&huart1, rxdata,sizeof(rxdata));
 		}
 
+
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+		if(htim->Instance == TIM2)
+		{
+				//enable MCU and exit sleep mode
+		}
 
 }
 
@@ -89,31 +101,27 @@ int main(void)
 	LORA_Init(UART1,&huart1);
   Soil_moisture_init_ADC1(&hadc1);
 	DHT11_init(&ustim);
+	sleepMode_init(&htim2);  // 1p
 
 
    data[0] = LORA_ADD;
 	 data[1] = NODE;
-	 data[2] = 0x05;
-	// data[3] = 0x0F;
-//	 uint8_t sum = checksum(data,strlen((char*)data));
-//	 data[strlen((char*)data)] = sum;
-//	
-  /* Infinite loop */
-	//Lora_SetMode(GPIOA,mode0);
-	//Lora_transmit(&huart1,data);
-//	HAL_UART_Receive_IT(&huart1, rxdata,sizeof(rxdata));
+	 data[2] = 0x01;
+   
+	 //var = 0;
   while (1)
   {   
 		  
-		   DHT11_Read(&ustim,&temp,&humi);
-		
-//		  data[3] = Soil_moisture_Read(&hadc1);
-//			Lora_SetMode(GPIOA,mode0);
-//		  Lora_transmit(&huart1,data);
-//		  Lora_SetMode(GPIOA,mode3);
-//			HAL_Delay(5000);
-		
 
+		  //data[3] = Soil_moisture_Read(&hadc1);
+			Lora_SetMode(GPIOA,mode0);
+		  Lora_transmit(&huart1,data);
+		  Lora_SetMode(GPIOA,mode3);
+			HAL_Delay(500);
+		
+		  /*go to slepp mode*/
+		  gotoSleepMode(&htim2);
+      // 1 phut cap danh thuc CPU 1 lan
   }
 }
 
@@ -124,7 +132,7 @@ int main(void)
   *            SYSCLK(Hz)                     = 72000000
   *            HCLK(Hz)                       = 72000000
   *            AHB Prescaler                  = 1
-  *            APB1 Prescaler                 = 2
+  *            APB1 Prescaler                 = 1
   *            APB2 Prescaler                 = 1
   *            HSE Frequency(Hz)              = 8000000
   *            HSE PREDIV1                    = 1
@@ -157,7 +165,7 @@ void SystemClock_Config(void)
   clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
-  clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2;  
+  clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;  
   if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
   {
     /* Initialization Error */
