@@ -12,7 +12,7 @@
 #define DHT11_ERROR_CHECKSUM  2
 #define DHT11_ERROR_TIMEOUT   3
 
-#define DHT11_PIN  GPIO_PIN_0
+#define DHT11_PIN  GPIO_PIN_1
 #define DHT11_PORT GPIOA
 
 uint8_t DHT11_init(TIM_HandleTypeDef *ustim);

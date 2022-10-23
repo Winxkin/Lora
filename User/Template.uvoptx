@@ -153,7 +153,7 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>var,0x10</ItemText>
+          <ItemText>var,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
@@ -1025,7 +1025,7 @@
       <GroupNumber>4</GroupNumber>
       <FileNumber>62</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\mylib\DHT11.c</PathWithFileName>

@@ -100,7 +100,7 @@ int main(void)
   /* Add your application code here */
 	LORA_Init(UART1,&huart1);
   Soil_moisture_init_ADC1(&hadc1);
-	DHT11_init(&ustim);
+	//DHT11_init(&ustim);
 	sleepMode_init(&htim2);  // 1p
 
 
@@ -113,14 +113,15 @@ int main(void)
   {   
 		  
 
-		  //data[3] = Soil_moisture_Read(&hadc1);
+		  data[3] = Soil_moisture_Read(&hadc1);
+		  humi = Soil_moisture_Read(&hadc1);
 			Lora_SetMode(GPIOA,mode0);
 		  Lora_transmit(&huart1,data);
 		  Lora_SetMode(GPIOA,mode3);
 			HAL_Delay(500);
 		
 		  /*go to slepp mode*/
-		  gotoSleepMode(&htim2);
+		  //gotoSleepMode(&htim2);
       // 1 phut cap danh thuc CPU 1 lan
   }
 }
@@ -132,7 +133,7 @@ int main(void)
   *            SYSCLK(Hz)                     = 72000000
   *            HCLK(Hz)                       = 72000000
   *            AHB Prescaler                  = 1
-  *            APB1 Prescaler                 = 1
+  *            APB1 Prescaler                 = 2
   *            APB2 Prescaler                 = 1
   *            HSE Frequency(Hz)              = 8000000
   *            HSE PREDIV1                    = 1
@@ -165,7 +166,7 @@ void SystemClock_Config(void)
   clkinitstruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   clkinitstruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
-  clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV1;  
+  clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2;  
   if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
   {
     /* Initialization Error */

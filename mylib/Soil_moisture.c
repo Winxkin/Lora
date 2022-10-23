@@ -48,4 +48,5 @@ uint8_t Soil_moisture_Read(ADC_HandleTypeDef *hadc1)
 	  HAL_ADC_Stop(hadc1);
 	  uint8_t humi = map(var,0,4095,1,100);
 		return (100 - humi); // return humi % value
+
 }
