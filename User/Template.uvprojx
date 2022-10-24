@@ -702,14 +702,24 @@
               <FilePath>..\mylib\Soil_moisture.c</FilePath>
             </File>
             <File>
-              <FileName>DHT11.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\mylib\DHT11.c</FilePath>
-            </File>
-            <File>
               <FileName>sleep_mode.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\mylib\sleep_mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\delay_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>DHT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\DHT.c</FilePath>
+            </File>
+            <File>
+              <FileName>DS18B20.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\mylib\DS18B20.c</FilePath>
             </File>
           </Files>
         </Group>

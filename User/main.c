@@ -21,8 +21,8 @@
 #include "main.h"
 #include "Lora.h"
 #include "Soil_moisture.h"
-#include "DHT11.h"
 #include "sleep_mode.h"
+#include "delay_timer.h"
 /** @addtogroup STM32F1xx_HAL_Examples
   * @{
   */
@@ -39,7 +39,7 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart1;
 ADC_HandleTypeDef hadc1;
-TIM_HandleTypeDef ustim;
+TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim2;
 
 //----------------
@@ -57,8 +57,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   
 	 if(huart->Instance == USART1)
 		{   
-			 Lora_transmit(&huart1,rxdata);
-			 HAL_UART_Receive_IT(&huart1, rxdata,sizeof(rxdata));
+			// Lora_transmit(&huart1,rxdata);
+			// HAL_UART_Receive_IT(&huart1, rxdata,sizeof(rxdata));
 		}
 
 
@@ -100,9 +100,18 @@ int main(void)
   /* Add your application code here */
 	LORA_Init(UART1,&huart1);
   Soil_moisture_init_ADC1(&hadc1);
-	//DHT11_init(&ustim);
 	sleepMode_init(&htim2);  // 1p
-
+  
+	/*---test code -----*/
+	DELAY_TIM_Init(&htim4);
+	GPIO_InitTypeDef GPIO_InitStructure;
+	__GPIOA_CLK_ENABLE();
+		GPIO_InitStructure.Pin = GPIO_PIN_5;
+		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
+		HAL_GPIO_Init(GPIOA,&GPIO_InitStructure);
+	
+	
 
    data[0] = LORA_ADD;
 	 data[1] = NODE;
@@ -112,17 +121,19 @@ int main(void)
   while (1)
   {   
 		  
-
-		  data[3] = Soil_moisture_Read(&hadc1);
-		  humi = Soil_moisture_Read(&hadc1);
-			Lora_SetMode(GPIOA,mode0);
-		  Lora_transmit(&huart1,data);
-		  Lora_SetMode(GPIOA,mode3);
-			HAL_Delay(500);
-		
-		  /*go to slepp mode*/
-		  //gotoSleepMode(&htim2);
+        
+//		  data[3] = Soil_moisture_Read(&hadc1);
+//			Lora_SetMode(GPIOA,mode0);
+//		  Lora_transmit(&huart1,data);
+//		  Lora_SetMode(GPIOA,mode3);
+//			HAL_Delay(500);
+//		  /*go to slepp mode*/
+//		  gotoSleepMode(&htim2);
       // 1 phut cap danh thuc CPU 1 lan
+		
+		  /*----test code----*/
+
+		
   }
 }
 
@@ -154,6 +165,7 @@ void SystemClock_Config(void)
   oscinitstruct.PLL.PLLState    = RCC_PLL_ON;
   oscinitstruct.PLL.PLLSource   = RCC_PLLSOURCE_HSE;
   oscinitstruct.PLL.PLLMUL      = RCC_PLL_MUL9;
+	oscinitstruct.HSIState = RCC_HSI_ON;  //config same cubemx
   if (HAL_RCC_OscConfig(&oscinitstruct)!= HAL_OK)
   {
     /* Initialization Error */
