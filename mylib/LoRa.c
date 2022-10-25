@@ -140,9 +140,18 @@ void Lora_SetMode (GPIO_TypeDef *GPIOx, E32_mode mode)
 		
 }
 
-void Lora_transmit ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData)
+void Lora_transmit ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData, option _option)
 {		
-		uint16_t lengh = strlen((char*)pData);
+		uint16_t lengh;
+	  if(_option == _string)
+		{
+			lengh = strlen((char*)pData);
+		}
+		if(_option == _struct)
+		{
+			lengh = sizeof(pData);
+		}
+	
 		HAL_UART_Transmit(s_UARTHandle,pData,lengh,HAL_MAX_DELAY);
 }
 

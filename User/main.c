@@ -124,7 +124,7 @@ int main(void)
         
 //		  data[3] = Soil_moisture_Read(&hadc1);
 //			Lora_SetMode(GPIOA,mode0);
-//		  Lora_transmit(&huart1,data);
+//		  Lora_transmit(&huart1,data,_struct);
 //		  Lora_SetMode(GPIOA,mode3);
 //			HAL_Delay(500);
 //		  /*go to slepp mode*/

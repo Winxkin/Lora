@@ -26,9 +26,15 @@ typedef enum
 	mode3 = 3,
 } E32_mode;
 
+typedef enum
+{
+	_string = 0,
+	_struct = 0,
+} option;
+
 int LORA_Init(UART_num UARTx,UART_HandleTypeDef *s_UARTHandle);
 void Lora_SetMode (GPIO_TypeDef *GPIOx, E32_mode mode);
-void Lora_transmit ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData);
+void Lora_transmit ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData, option _option);
 void clear_data(uint8_t *pData);
 int Lora_Receive ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData);
 uint8_t checksum (uint8_t *Data, int lengh);
