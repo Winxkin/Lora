@@ -23,6 +23,8 @@
 #include "Soil_moisture.h"
 #include "sleep_mode.h"
 #include "delay_timer.h"
+#include "DS18B20.h"
+
 /** @addtogroup STM32F1xx_HAL_Examples
   * @{
   */
@@ -37,21 +39,29 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart1;
-ADC_HandleTypeDef hadc1;
-TIM_HandleTypeDef htim4;
-TIM_HandleTypeDef htim2;
+UART_HandleTypeDef huart1; //uart1 for lora e32
+ADC_HandleTypeDef hadc1; //adc1 for read sensor
+DMA_HandleTypeDef hdma_adc1; //3 channel
+TIM_HandleTypeDef htim4; //htim4 for delayus
+TIM_HandleTypeDef htim2; //htim2 for sleepmode
+
+DS18B20_Name DS1;
 
 //----------------
 uint8_t data[10];
 uint8_t rxdata[3];
-uint8_t var;
+uint16_t var[3];
 uint8_t var2;
-uint8_t temp,humi;
+uint8_t temp,humi,light,air;
+float ds;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
 /* Private functions ---------------------------------------------------------*/
+
+
+
+/*Call Back function----------------------------------------------------------*/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   
@@ -72,6 +82,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 
 }
+
 
 /**
   * @brief  Main program
@@ -99,17 +110,12 @@ int main(void)
 	
   /* Add your application code here */
 	LORA_Init(UART1,&huart1);
-  Soil_moisture_init_ADC1(&hadc1);
+  Sensor_init_ADC1(&hadc1, &hdma_adc1);
 	sleepMode_init(&htim2);  // 1p
+	DS18B20_Init(&DS1, &htim4, GPIOA, GPIO_PIN_5);
   
 	/*---test code -----*/
-	DELAY_TIM_Init(&htim4);
-	GPIO_InitTypeDef GPIO_InitStructure;
-	__GPIOA_CLK_ENABLE();
-		GPIO_InitStructure.Pin = GPIO_PIN_5;
-		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-		GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
-		HAL_GPIO_Init(GPIOA,&GPIO_InitStructure);
+  
 	
 	
 
@@ -117,12 +123,13 @@ int main(void)
 	 data[1] = NODE;
 	 data[2] = 0x01;
    
-	 //var = 0;
+	  
+	  
   while (1)
   {   
 		  
         
-//		  data[3] = Soil_moisture_Read(&hadc1);
+//			get_sensor_data(&hadc1,&humi,&light,&air);
 //			Lora_SetMode(GPIOA,mode0);
 //		  Lora_transmit(&huart1,data,_struct);
 //		  Lora_SetMode(GPIOA,mode3);
@@ -132,8 +139,13 @@ int main(void)
       // 1 phut cap danh thuc CPU 1 lan
 		
 		  /*----test code----*/
+		//HAL_ADC_Start_DMA(&hadc1,(uint32_t*)var,3);
+		get_sensor_data(&hadc1,&humi,&light,&air);
+		HAL_Delay(100);
 
-		
+      
+//			ds = DS18B20_ReadTemp(&DS1);
+			
   }
 }
 
@@ -157,6 +169,7 @@ void SystemClock_Config(void)
 {
   RCC_ClkInitTypeDef clkinitstruct = {0};
   RCC_OscInitTypeDef oscinitstruct = {0};
+	RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
   
   /* Enable HSE Oscillator and activate PLL with HSE as source */
   oscinitstruct.OscillatorType  = RCC_OSCILLATORTYPE_HSE;
@@ -180,6 +193,13 @@ void SystemClock_Config(void)
   clkinitstruct.APB2CLKDivider = RCC_HCLK_DIV1;
   clkinitstruct.APB1CLKDivider = RCC_HCLK_DIV2;  
   if (HAL_RCC_ClockConfig(&clkinitstruct, FLASH_LATENCY_2)!= HAL_OK)
+  {
+    /* Initialization Error */
+    while(1);
+  }
+	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     /* Initialization Error */
     while(1);

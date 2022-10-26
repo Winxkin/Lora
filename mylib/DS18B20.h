@@ -15,6 +15,7 @@ Huong dan su dung:
 #define __DS18B20_H
 
 #include "stm32f1xx_hal.h"
+#include "delay_timer.h"
 typedef struct
 {	
 	TIM_HandleTypeDef* Timer;

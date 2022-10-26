@@ -11,8 +11,11 @@
 /*This library design for module soil_moisture*/
 /*A0 -> PA0 */
 /*analog value 0->1023*/
-uint8_t Soil_moisture_init_ADC1(ADC_HandleTypeDef *hadc1);
-uint8_t Soil_moisture_Read(ADC_HandleTypeDef *hadc1);
-long map(long x, long in_min, long in_max, long out_min, long out_max);
+uint8_t Sensor_init_ADC1(ADC_HandleTypeDef *hadc1,DMA_HandleTypeDef *hdma_adc1);
+uint8_t Soil_moisture_Read(ADC_HandleTypeDef *hadc1,uint16_t var);
+uint8_t MQ135_Read(ADC_HandleTypeDef *hadc1,uint16_t var);
+uint8_t Light_Read(ADC_HandleTypeDef *hadc1,uint16_t var);
+
+void get_sensor_data(ADC_HandleTypeDef *hadc1,uint8_t *humi,uint8_t *light,uint8_t *air);
 
 #endif

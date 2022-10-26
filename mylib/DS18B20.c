@@ -13,7 +13,7 @@ Huong dan su dung:
 ******************************************************************************************************************/
 #include "DS18B20.h"
 //************************** Low Level Layer ********************************************************//
-#include "delay_timer.h"
+
 
 static void DS18B20_DelayInit(DS18B20_Name* DS18B20)
 {
@@ -111,6 +111,12 @@ static uint8_t DS18B20_Read(DS18B20_Name* DS18B20)
 //************************** High Level Layer ********************************************************//
 void DS18B20_Init(DS18B20_Name* DS18B20, TIM_HandleTypeDef* Timer, GPIO_TypeDef* DS_PORT, uint16_t DS_Pin)
 {
+	if(DS_PORT == GPIOA)
+	{	__HAL_RCC_GPIOA_CLK_ENABLE();}
+	
+	if(DS_PORT == GPIOB)
+	{	__HAL_RCC_GPIOB_CLK_ENABLE();}
+	
 	DS18B20->PORT = DS_PORT;
 	DS18B20->Pin = DS_Pin;
 	DS18B20->Timer = Timer;
