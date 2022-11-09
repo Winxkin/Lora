@@ -53,7 +53,7 @@ uint8_t rxdata[3];
 uint16_t var[3];
 uint8_t var2;
 uint8_t temp,humi,light,air;
-float ds;
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
@@ -121,30 +121,36 @@ int main(void)
 
    data[0] = LORA_ADD;
 	 data[1] = NODE;
-	 data[2] = 0x01;
    
-	  
+	  var2 = 0;
 	  
   while (1)
   {   
 		  
         
-//			get_sensor_data(&hadc1,&humi,&light,&air);
-//			Lora_SetMode(GPIOA,mode0);
-//		  Lora_transmit(&huart1,data,_struct);
-//		  Lora_SetMode(GPIOA,mode3);
-//			HAL_Delay(500);
-//		  /*go to slepp mode*/
-//		  gotoSleepMode(&htim2);
-      // 1 phut cap danh thuc CPU 1 lan
+
+			Lora_SetMode(GPIOA,mode0);
+			get_sensor_data(&hadc1,&humi,&light,&air);
+			temp = (uint8_t)DS18B20_ReadTemp(&DS1);
+		  data[2] = humi;
+		  data[3] = light;
+		  data[4] = temp;
+			Lora_transmit(&huart1,data,_struct);
+		  Lora_SetMode(GPIOA,mode3);
+			HAL_Delay(500);
+		  /*go to slepp mode*/
+		  var2 ++;
+		  gotoSleepMode(&htim2);
+      // 10s cap danh thuc CPU 1 lan
 		
 		  /*----test code----*/
 		//HAL_ADC_Start_DMA(&hadc1,(uint32_t*)var,3);
-		get_sensor_data(&hadc1,&humi,&light,&air);
-		HAL_Delay(100);
+//		get_sensor_data(&hadc1,&humi,&light,&air);
+//		ds = DS18B20_ReadTemp(&DS1);
+//		HAL_Delay(100);
 
       
-//			ds = DS18B20_ReadTemp(&DS1);
+		
 			
   }
 }
