@@ -151,7 +151,7 @@ void Lora_transmit ( UART_HandleTypeDef *s_UARTHandle, uint8_t *pData, option _o
 		{
 			lengh = sizeof(pData);
 		}
-	
+		lengh = lengh +1;
 		HAL_UART_Transmit(s_UARTHandle,pData,lengh,HAL_MAX_DELAY);
 }
 

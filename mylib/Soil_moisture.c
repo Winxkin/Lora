@@ -94,11 +94,11 @@ void get_sensor_data(ADC_HandleTypeDef *hadc1,uint8_t *humi,uint8_t *light,uint8
 	  HAL_ADC_Start_DMA(hadc1,(uint32_t*)var,3);
 	  HAL_Delay(100);
 	  /*PA0 -> humi*/
-		*humi = Soil_moisture_Read(hadc1,var[0]);
+		*light = Light_Read(hadc1,var[0]);
 		/*PA1 -> light*/
-		*light = Light_Read(hadc1,var[1]);
+		*humi = Soil_moisture_Read(hadc1,var[1]);
 	  /*PA2 -> air*/
-		*air = MQ135_Read(hadc1,var[2]);
+		//*air = var[2];
 }
 
 
